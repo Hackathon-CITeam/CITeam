@@ -44,11 +44,12 @@ CITeams is a convenient Slack app to help MCIT students find and recruit project
 
 ### Development Instructions
 
-1. Run `git clone git@github.com:Hackathon-CITeam/CITeams.git` to your local machine.
+1. Run `git clone git@github.com:Hackathon-CITeam/CITeams.git` to clone the project to your local machine.
 2. `cd` into the repo you just created, run `git branch [your name]` to create your own branch.
-3. run `npm install` to install dependencies **the first time** you created the project; run `node app.js` to start the app, and check the app in Slack. Every time you make some changes, you need to restart the app using `node app.js` and refresh the app using `command + R`. 
-4. After you have made some code changes on your branch, run `git add .`, `git commit -m "your commit message"`, `git push` to commit your change to your remote branch on GitHub. Note that you need to run `git push --set-upstream origin [your branch name]` **the first time** after you created your local branch. Only push codes to GitHub if you make sure that the app is not broken after your latest code change.
-5. Regularly push your code to GitHub, and make pull requests from main branch to fetch latest changes; talk to your other team members if you encounter a conflict and are not sure how to resolve it.
+3. Create a `.env` file and add tokens and secrets to the file; open the `.gitignore` file, make sure `node_modules` and `.env` are ignored; in other words, **DO NOT** push them to GitHub.
+4. run `npm install` to install dependencies **the first time** you created the project; run `node app.js` to start the app, and check the app in Slack. **Every time** you make code changes, you need to restart the app using `node app.js` and refresh the app using `command + R` to see the latest changes reflected in the Slack app. 
+5. After you have made some code changes on your branch, run `git add .`, `git commit -m "your commit message"`, `git push` to commit your change to your remote branch on GitHub. Note that you need to run `git push --set-upstream origin [your branch name]` **the first time** after you created your local branch. Only push codes to GitHub if you make sure that the app is not broken after your latest code change.
+6. Regularly push your code to GitHub, and make pull requests from main branch to fetch latest changes; talk to your other team members if you encounter a conflict and are not sure how to resolve it.
 
 ### Links
 
