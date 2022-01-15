@@ -19,42 +19,63 @@ socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
       token: botToken,
       user_id: event.user,
       view: {
-        type: 'home',
-        callback_id: 'home_view',
+        type: "home",
+        callback_id: "home_view",
 
         /* body of the view */
         blocks: [
           {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "*Welcome to your _App's Home_* :tada:"
-            }
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: "*Welcome to CITeams Home Page * :tada:",
+            },
           },
           {
-            "type": "divider"
+            type: "divider",
           },
           {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "here is where we will display all the posts"
-            }
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: "CITeams is a convenient Slack app to help MCIT students find and recruit project team members for CIT & CIS courses.",
+            },
           },
           {
-            "type": "actions",
-            "elements": [
+            type: "actions",
+            elements: [
               {
-                "type": "button",
-                "text": {
-                  "type": "plain_text",
-                  "text": "useless button!"
-                }
-              }
-            ]
-          }
-        ]
-      }
+                type: "button",
+                text: {
+                  type: "plain_text",
+                  text: "Create a new post",
+                  emoji: true,
+                },
+                style: "primary",
+                value: "create_post",
+              },
+              {
+                type: "button",
+                text: {
+                  type: "plain_text",
+                  text: "View my posts",
+                  emoji: true,
+                },
+                value: "my_posts",
+              },
+              {
+                type: "button",
+                text: {
+                  type: "plain_text",
+                  text: "View all posts",
+                  emoji: true,
+                },
+                value: "all_posts",
+              },
+            ],
+          },
+        ],
+      },
     });
   } catch (error) {
     console.log('An error occurred', error);
@@ -63,6 +84,7 @@ socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
 
 (async () => {
   await socketModeClient.start();
+  console.log("⚡️ Bolt app is running!");
 })();
 
 //We will use the following after we deploy the app

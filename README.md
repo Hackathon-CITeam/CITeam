@@ -14,7 +14,7 @@
 
 ### General Idea
 
-CITeam is a convenient Slack app to help MCIT students find and recruit project team members for CIT & CIS courses.
+CITeams is a convenient Slack app to help MCIT students find and recruit project team members for CIT & CIS courses.
 
 ### User Profile & Pain Points
 
@@ -42,10 +42,20 @@ CITeam is a convenient Slack app to help MCIT students find and recruit project 
 * MongoDB
 * Heroku
 
+### Development Instructions
+
+1. Run `git clone git@github.com:Hackathon-CITeam/CITeams.git` to your local machine.
+2. `cd` into the repo you just created, run `git branch [your name]` to create your own branch.
+3. run `npm install` to install dependencies **the first time** you created the project; run `node app.js` to start the app, and check the app in Slack. Every time you make some changes, you need to restart the app using `node app.js` and refresh the app using `command + R`. 
+4. After you have made some code changes on your branch, run `git add .`, `git commit -m "your commit message"`, `git push` to commit your change to your remote branch on GitHub. Note that you need to run `git push --set-upstream origin [your branch name]` **the first time** after you created your local branch. Only push codes to GitHub if you make sure that the app is not broken after your latest code change.
+5. Regularly push your code to GitHub, and make pull requests from main branch to fetch latest changes; talk to your other team members if you encounter a conflict and are not sure how to resolve it.
+
 ### Links
 
 1. [Hackathon Devpost Homepage](https://mcit-2022-winter-hackathon.devpost.com/)
 2. [PRD Google Doc](https://docs.google.com/document/d/1QmjjsY4zd4bcX3Dy_w8sGSnYyfJp9Zwr6nN-WpP9Cso/edit)
 3. [Slack API Documentation](https://api.slack.com/start)
+4. [Slack Block Kit Builder (View Templates)](https://app.slack.com/block-kit-builder/)
+5. [Slack App Home](https://api.slack.com/apps/A02TYDHMNTG)
 
 Jan 14th
