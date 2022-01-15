@@ -28,11 +28,8 @@ socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
             type: "section",
             text: {
               type: "mrkdwn",
-              text: "*Welcome to CITeams Home Page * :tada:",
+              text: "*Descriptions*",
             },
-          },
-          {
-            type: "divider",
           },
           {
             type: "section",
@@ -42,38 +39,93 @@ socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
             },
           },
           {
+            type: "divider",
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: "*Want to get started? Click to create profile.*",
+            },
+          },
+          {
             type: "actions",
             elements: [
               {
                 type: "button",
                 text: {
                   type: "plain_text",
-                  text: "Create a new post",
+                  text: "Create Profile",
                   emoji: true,
                 },
                 style: "primary",
-                value: "create_post",
-              },
-              {
-                type: "button",
-                text: {
-                  type: "plain_text",
-                  text: "View my posts",
-                  emoji: true,
-                },
-                value: "my_posts",
-              },
-              {
-                type: "button",
-                text: {
-                  type: "plain_text",
-                  text: "View all posts",
-                  emoji: true,
-                },
-                value: "all_posts",
+                value: "create_profile",
               },
             ],
           },
+          {
+            type: "divider",
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: ":heart_eyes_cat: *My Posts*\nYou don't have any posts yet.",
+            },
+            accessory: {
+              type: "button",
+              text: {
+                type: "plain_text",
+                text: "Create Post",
+                emoji: true,
+              },
+              style: "primary",
+              value: "create_post",
+            },
+          },
+          {
+            type: "divider",
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: ":heart_eyes_cat: *Post Board*\nNo posts yet.",
+            },
+          },
+          // {
+          //   type: "actions",
+          //   elements: [
+          //     {
+          //       type: "button",
+          //       text: {
+          //         type: "plain_text",
+          //         text: "Create a new post",
+          //         emoji: true,
+          //       },
+          //       style: "primary",
+          //       value: "create_post",
+          //     },
+          //     {
+          //       type: "button",
+          //       text: {
+          //         type: "plain_text",
+          //         text: "View my posts",
+          //         emoji: true,
+          //       },
+          //       value: "my_posts",
+          //     },
+          //     {
+          //       type: "button",
+          //       text: {
+          //         type: "plain_text",
+          //         text: "View all posts",
+          //         emoji: true,
+          //       },
+          //       value: "all_posts",
+          //     },
+          //   ],
+          // },
         ],
       },
     });
