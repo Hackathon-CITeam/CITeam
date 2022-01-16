@@ -6,12 +6,12 @@ const { MongoClient, ObjectId } = require('mongodb');
 // Import Uniform Resource Identifier for MongoDB cluster from .env file
 const url = process.env.MONGODB_URL;
 
-// FUNCTION: Returns a new MongoClient object
+// FUNCTION: Return a new MongoClient object
 // const newClient = function() {
 //   return new MongoClient(uri, { useUnifiedTopology: true });
 // }
 
-// Connect to our db on the cloud
+// FUNCTION: Connect to our db on the cloud
 const connect = async (url) => {
   try {
     const tmp = (await MongoClient.connect(url,
@@ -25,7 +25,7 @@ const connect = async (url) => {
   }
 };
 
-// FUNCTION: Checks if a user is already in "users" collection
+// FUNCTION: Check if a user is already in "users" collection
 // ARGUMENTS: userId (String) - Slack ID
 const userExists = async function(db, userId) {
   try {
@@ -39,7 +39,7 @@ const userExists = async function(db, userId) {
   }
 }
 
-// FUNCTION: Adds a new user to the "users" collection
+// FUNCTION: Add a new user to the "users" collection
 // ARGUMENTS: userName (String), userId (String), userYear (String)
 const addUser = async (db, newUser) => {
   try {
@@ -57,7 +57,7 @@ const addUser = async (db, newUser) => {
   }
 };
 
-// FUNCTION: Adds a new post to the "posts" collection
+// FUNCTION: Add a new post to the "posts" collection
 const addPost = async (db, newPost) => {
   try {
     const result = await db.collection('posts').insertOne(newPost);
@@ -68,6 +68,18 @@ const addPost = async (db, newPost) => {
     throw new Error('Error adding the post');
   }
 };
+
+// DB TODO: Change DB Schema to bind users and posts
+ 
+// FUNCTION TODO: Get all posts
+
+// FUNCTION TODO: Get all posts by user id
+
+// FUNCTION TODO: Get a post by user id
+
+// FUNCTION TODO: Edit a post
+
+// FUNCTION TODO: Delete a post
 
 module.exports = {
   connect,

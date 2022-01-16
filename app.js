@@ -104,6 +104,7 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
 });
 
 // CLICK BUTTON: add a new post to database
+// TODO: create a new channel
 socketModeClient.on("interactive", async ({ body, ack }) => {
   try {
     await ack();
@@ -139,13 +140,20 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
   }
 });
 
+// TODO: Edit a post
+
+// TODO: Delete a post
+
+// TODO: Join Channel
+
 
 (async () => {
   await socketModeClient.start();
   console.log("⚡️ Bolt app is running!");
 })();
 
-// We will use the following after we deploy the app
+
+// TODO: Deployment using Heroku (We will use the following after we deploy the app.)
 
 // const { App } = require("@slack/bolt");
 
