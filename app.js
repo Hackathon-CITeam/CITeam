@@ -1,10 +1,13 @@
 // Require the Bolt package (github.com/slackapi/bolt)
 require('dotenv').config();
 
+// Import other modules
+const views = require("./views");
+
 const { SocketModeClient } = require('@slack/socket-mode');
 const { WebClient } = require('@slack/web-api');
-const appToken = process.env.SLACK_APP_TOKEN;
 
+const appToken = process.env.SLACK_APP_TOKEN;
 const botToken = process.env.SLACK_BOT_TOKEN;
 
 const socketModeClient = new SocketModeClient({ appToken });
@@ -60,6 +63,7 @@ socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
                 },
                 style: "primary",
                 value: "create_profile",
+                action_id: "create_profile",
               },
             ],
           },
@@ -81,6 +85,7 @@ socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
               },
               style: "primary",
               value: "create_post",
+              action_id: "create_post",
             },
           },
           {
@@ -134,12 +139,35 @@ socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
   }
 });
 
+// CLICK BUTTON: Create user profile (See https://slack.dev/node-slack-sdk/socket-mode)
+socketModeClient.on("interactive", async ({ body, ack }) => {
+  await ack();
+  console.log(body);
+  if (body.actions[0].value === "create_profile") {
+    await webclient.views.open({
+      trigger_id: body.trigger_id,
+      view: views.createProfile(),
+    });
+  }
+});
+
+// CLICK BUTTON: Create a new post 
+socketModeClient.on("interactive", async ({ body, ack }) => {
+  await ack();
+  if (body.actions[0].value === "create_post") {
+    await webclient.views.open({
+      trigger_id: body.trigger_id,
+      view: views.createPost(),
+    });
+  }
+});
+
 (async () => {
   await socketModeClient.start();
   console.log("⚡️ Bolt app is running!");
 })();
 
-//We will use the following after we deploy the app
+// We will use the following after we deploy the app
 
 // const { App } = require("@slack/bolt");
 
