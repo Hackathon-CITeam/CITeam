@@ -33,7 +33,12 @@ const createProfile = () => {
         type: "input",
         element: {
           type: "plain_text_input",
-          action_id: "enter_username",
+          action_id: "profile_enter_username",
+          placeholder: {
+            type: "plain_text",
+            text: "John Smith",
+            emoji: true,
+          },
         },
         label: {
           type: "plain_text",
@@ -42,29 +47,20 @@ const createProfile = () => {
         },
       },
       {
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text: "\n",
-        },
-      },
-      {
         type: "input",
         element: {
           type: "plain_text_input",
-          action_id: "enter_year",
+          action_id: "profile_enter_year",
+          placeholder: {
+            type: "plain_text",
+            text: "2023",
+            emoji: true,
+          },
         },
         label: {
           type: "plain_text",
           text: "Your Graduation Year",
           emoji: true,
-        },
-      },
-      {
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text: "\n",
         },
       },
       {
@@ -110,7 +106,7 @@ const createProfile = () => {
               value: "value-3",
             },
           ],
-          action_id: "enter_expertise",
+          action_id: "profile_enter_expertise",
         },
         label: {
           type: "plain_text",
@@ -123,6 +119,7 @@ const createProfile = () => {
 };
 
 // MODAL: Render the view for creating a new post
+// TODO: should pass in user id
 const createPost = () => {
   return {
     title: {
@@ -156,10 +153,10 @@ const createPost = () => {
         type: "input",
         element: {
           type: "plain_text_input",
-          action_id: "display_username",
+          action_id: "post_enter_username",
           placeholder: {
             type: "plain_text",
-            text: "Ruichen Zhang",
+            text: "Enter your name",
             emoji: true,
           },
         },
@@ -167,13 +164,6 @@ const createPost = () => {
           type: "plain_text",
           text: "Your Name",
           emoji: true,
-        },
-      },
-      {
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text: "\n",
         },
       },
       {
@@ -189,7 +179,7 @@ const createPost = () => {
             {
               text: {
                 type: "plain_text",
-                text: "CIT 594",
+                text: "CIT 590",
                 emoji: true,
               },
               value: "value-0",
@@ -197,7 +187,7 @@ const createPost = () => {
             {
               text: {
                 type: "plain_text",
-                text: "CIT 595",
+                text: "CIT 591",
                 emoji: true,
               },
               value: "value-1",
@@ -205,7 +195,7 @@ const createPost = () => {
             {
               text: {
                 type: "plain_text",
-                text: "CIT 596",
+                text: "CIT 592",
                 emoji: true,
               },
               value: "value-2",
@@ -213,13 +203,69 @@ const createPost = () => {
             {
               text: {
                 type: "plain_text",
-                text: "CIS 550",
+                text: "CIT 593",
                 emoji: true,
               },
               value: "value-3",
             },
+            {
+              text: {
+                type: "plain_text",
+                text: "CIT 594",
+                emoji: true,
+              },
+              value: "value-4",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "CIT 595",
+                emoji: true,
+              },
+              value: "value-5",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "CIT 596",
+                emoji: true,
+              },
+              value: "value-6",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "CIS 520",
+                emoji: true,
+              },
+              value: "value-7",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "CIS 545",
+                emoji: true,
+              },
+              value: "value-8",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "CIS 550",
+                emoji: true,
+              },
+              value: "value-9",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "CIS 555",
+                emoji: true,
+              },
+              value: "value-10",
+            },
           ],
-          action_id: "enter_course",
+          action_id: "post_enter_course",
         },
         label: {
           type: "plain_text",
@@ -227,9 +273,196 @@ const createPost = () => {
           emoji: true,
         },
       },
+      {
+        type: "input",
+        element: {
+          type: "multi_static_select",
+          placeholder: {
+            type: "plain_text",
+            text: "Select options",
+            emoji: true,
+          },
+          options: [
+            {
+              text: {
+                type: "plain_text",
+                text: "Web Programming",
+                emoji: true,
+              },
+              value: "value-0",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "Machine Learning",
+                emoji: true,
+              },
+              value: "value-1",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "Product Management",
+                emoji: true,
+              },
+              value: "value-2",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "UI & UX Design",
+                emoji: true,
+              },
+              value: "value-3",
+            },
+          ],
+          action_id: "post_enter_expertise",
+        },
+        label: {
+          type: "plain_text",
+          text: "Your Expertise",
+          emoji: true,
+        },
+      },
+      {
+        type: "input",
+        element: {
+          type: "multi_static_select",
+          placeholder: {
+            type: "plain_text",
+            text: "Select options",
+            emoji: true,
+          },
+          options: [
+            {
+              text: {
+                type: "plain_text",
+                text: "Ruichen Zhang",
+                emoji: true,
+              },
+              value: "value-0",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "Ruifan Wang",
+                emoji: true,
+              },
+              value: "value-1",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "Jiayun(Seren) Liu",
+                emoji: true,
+              },
+              value: "value-2",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "Wentao Xu",
+                emoji: true,
+              },
+              value: "value-3",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "Yihong(Joanne) Zhang",
+                emoji: true,
+              },
+              value: "value-4",
+            },
+          ],
+          action_id: "post_enter_member",
+        },
+        label: {
+          type: "plain_text",
+          text: "Current Member (Optional)",
+          emoji: true,
+        },
+      },
+      {
+        type: "input",
+        element: {
+          type: "multi_static_select",
+          placeholder: {
+            type: "plain_text",
+            text: "Select options",
+            emoji: true,
+          },
+          options: [
+            {
+              text: {
+                type: "plain_text",
+                text: "1",
+                emoji: true,
+              },
+              value: "value-0",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "2",
+                emoji: true,
+              },
+              value: "value-1",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "3",
+                emoji: true,
+              },
+              value: "value-2",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "4",
+                emoji: true,
+              },
+              value: "value-3",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "5",
+                emoji: true,
+              },
+              value: "value-4",
+            },
+          ],
+          action_id: "post_enter_number",
+        },
+        label: {
+          type: "plain_text",
+          text: "Number of teammates you want to recruit",
+          emoji: true,
+        },
+      },
+      {
+        type: "input",
+        element: {
+          type: "plain_text_input",
+          multiline: true,
+          action_id: "post_enter_message",
+          placeholder: {
+            type: "plain_text",
+            text: "Specify your need ...",
+            emoji: true,
+          },
+        },
+        label: {
+          type: "plain_text",
+          text: "Message (Optional)",
+          emoji: true,
+        },
+      },
     ],
   };
-}
+};
 
 module.exports = {
   createProfile: createProfile,

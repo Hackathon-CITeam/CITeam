@@ -142,7 +142,7 @@ socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
 // CLICK BUTTON: Create user profile (See https://slack.dev/node-slack-sdk/socket-mode)
 socketModeClient.on("interactive", async ({ body, ack }) => {
   await ack();
-  console.log(body);
+  // console.log(body);
   if (body.actions[0].value === "create_profile") {
     await webclient.views.open({
       trigger_id: body.trigger_id,
