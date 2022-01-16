@@ -122,10 +122,6 @@ const updatePost = async (db, updatedPost) => {
 
 // FUNCTION TODO: Delete a post
 
-// FUNCTION TODO: A user joins a channel
-
-// FUNCTION TODO: A user leaves a channel
-
 module.exports = {
   connect,
   userExists,
