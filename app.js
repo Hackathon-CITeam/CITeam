@@ -139,10 +139,10 @@ socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
   }
 });
 
-// CLICK BUTTON: Create user profile (See https://slack.dev/node-slack-sdk/socket-mode)
+// CLICK BUTTON: Prompt to create user profile view (See https://slack.dev/node-slack-sdk/socket-mode)
 socketModeClient.on("interactive", async ({ body, ack }) => {
   await ack();
-  // console.log(body);
+  console.log(body);
   if (body.actions[0].value === "create_profile") {
     await webclient.views.open({
       trigger_id: body.trigger_id,
@@ -151,16 +151,34 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
   }
 });
 
-// CLICK BUTTON: Create a new post 
+// CLICK BUTTON: Grab info from user profile modal to the database
 socketModeClient.on("interactive", async ({ body, ack }) => {
   await ack();
-  if (body.actions[0].value === "create_post") {
-    await webclient.views.open({
-      trigger_id: body.trigger_id,
-      view: views.createPost(),
+  // Try catch
+  if (body.view.callback_id === "modal_create_profile") {
+    const data = body.view.state.values;
+    const arr = Object.keys(data).map(function (k) {
+      return data[k];
     });
+    // console.log(arr);
+    const name = arr[0].profile_enter_username.value;
+    const year = arr[1].profile_enter_year.value;
+    const skills = arr[2].profile_enter_expertise.selected_options.map(
+      (e) => e.text.text
+    );
   }
 });
+
+// CLICK BUTTON: Prompt to create a new post view
+// socketModeClient.on("interactive", async ({ body, ack }) => {
+//   await ack();
+//   if (body.actions[0].value === "modal_create_profile") {
+//     await webclient.views.open({
+//       trigger_id: body.trigger_id,
+//       view: views.createPost(),
+//     });
+//   }
+// });
 
 (async () => {
   await socketModeClient.start();

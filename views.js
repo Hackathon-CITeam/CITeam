@@ -2,6 +2,7 @@
 // TODO: should pass in user id
 const createProfile = () => {
   return {
+    callback_id: "modal_create_profile",
     title: {
       type: "plain_text",
       text: "Create Profile",
