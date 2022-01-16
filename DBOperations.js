@@ -7,11 +7,6 @@ const post = require("./views/post");
 // Import Uniform Resource Identifier for MongoDB cluster from .env file
 const url = process.env.MONGODB_URL;
 
-// FUNCTION: Return a new MongoClient object
-// const newClient = function() {
-//   return new MongoClient(uri, { useUnifiedTopology: true });
-// }
-
 // FUNCTION: Connect to our db on the cloud
 const connect = async (url) => {
   try {
@@ -31,7 +26,6 @@ const connect = async (url) => {
 };
 
 // FUNCTION: Check if a user is already in "users" collection
-// ARGUMENTS: userId (String) - Slack ID
 const userExists = async function (db, userId) {
   try {
     const result = await db.collection("users").findOne({ userId: userId });
@@ -45,7 +39,6 @@ const userExists = async function (db, userId) {
 };
 
 // FUNCTION: Add a new user to the "users" collection
-// ARGUMENTS: userName (String), userId (String), userYear (String)
 const addUser = async (db, newUser) => {
   try {
     // const exist = await userExists(db, newUser.userId); // newUser.userId should be changed!
@@ -59,6 +52,39 @@ const addUser = async (db, newUser) => {
   } catch (err) {
     console.log(`error: ${err.message}`);
     throw new Error("Error adding the user");
+  }
+};
+
+// FUNCTION: Get a user by user id
+const getUserById = async (db, userId) => {
+  try {
+    const result = await db.collection("users").findOne({ userId: userId });
+    if (!result) {
+      console.log("The user does not exist!");
+    } else {
+      console.log(`Successfully retrieved the user ${userId}`);
+      return result;
+    }
+  } catch (err) {
+    console.log(`error: ${err.message}`);
+    throw new Error(`Error retrieving the user ${userId}`);
+  }
+};
+
+// FUNCTION: Edit a user by user id
+const updateUser = async (db, userId, updatedUser) => {
+  try {
+    const result = await db.collection("users").updateOne(
+      { userId: userId },
+      {
+        $set: updatedUser,
+        $currentDate: { lastModified: false },
+      }
+    );
+    console.log(`Successfully updated the user to be: ${result}`);
+  } catch (err) {
+    console.log(`error: ${err.message}`);
+    throw new Error("Error updating the user");
   }
 };
 
@@ -99,35 +125,69 @@ const getAllPostsByUserId = async (db, userId) => {
   }
 };
 
-// FUNCTION: Edit a post
-// TODO: not by userId, by course name (?)
-const updatePost = async (db, updatedPost) => {
+// FUNCTION: Get a post by _id
+const getPostById = async (db, postId) => {
   try {
-    const userID = updatePost.userId;
-    const { userId, ...rest } = updatedPost;
+    // may change ObjectId(postId) later
+    const result = await db
+      .collection("posts")
+      .findOne({ _id: ObjectId(postId) });
+    if (!result) {
+      console.log("The post does not exist!");
+    } else {
+      console.log(`Successfully retrieved the post ${postId}`);
+      return result;
+    }
+  } catch (err) {
+    console.log(`error: ${err.message}`);
+    throw new Error(`Error retrieving the post ${postId}`);
+  }
+};
+
+// FUNCTION: Edit a post by post id
+const updatePost = async (db, postId, updatedPost) => {
+  try {
+    // console.log(postId);
+    // const { _id, ...rest } = updatedPost;
+    // console.log(updatePost);
     const result = await db.collection("posts").updateOne(
-      { userId: userID },
+      { _id: ObjectId(postId) },
       {
-        $set: updatePost,
-        $currentDate: { lastModified: true },
+        $set: updatedPost,
+        $currentDate: { lastModified: false },
       }
     );
-    console.log(`Successfully updated the post. Updated post: ${result}`);
-    return result;
+    console.log(`Successfully updated the post to be: ${result}`);
   } catch (err) {
     console.log(`error: ${err.message}`);
     throw new Error("Error updating the post");
   }
 };
 
-// FUNCTION TODO: Delete a post
+// FUNCTION: Delete a post by post id
+const deletePost = async (db, postId) => {
+  try {
+    // may change ObjectId(postId) later
+    const result = await db
+      .collection("posts")
+      .deleteOne({ _id: ObjectId(postId) });
+    console.log(`Successfully deleted the post ${postId}`);
+  } catch (err) {
+    console.log(`error: ${err.message}`);
+    throw new Error(`Error deleting the post ${postId}`);
+  }
+};
 
 module.exports = {
   connect,
   userExists,
   addUser,
+  getUserById,
+  updateUser,
   addPost,
   getAllPosts,
   getAllPostsByUserId,
+  getPostById,
   updatePost,
+  deletePost,
 };

@@ -68,21 +68,22 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
         view: post.createPost(),
       });
     }
-    console.log(body);
+    // console.log(body);
     // For Testing Only
     // await func();
-    // // store post id
-    // obj = {
-    //   userId: body.user.id,
-    //   name: name,
-    //   course: course,
-    //   expertise: skills,
-    //   member: member_ids,
-    //   capacity: team_capacity,
-    //   message: message,
-    // };
-    // const posts = await lib.updatePost(db, obj);
-    // console.log(posts);
+    // const result = await lib.getUserById(db, "U02C2CKDF38");
+    // console.log(result);
+  //   await func();
+  //   // store post id
+  //   obj = {
+  //     course: "CIT 596",
+  //     expertise: ["Java"],
+  //     member: ["U01F5ADBG1K"],
+  //     capacity: 4,
+  //     message: "hey",
+  //   };
+  //   const posts = await lib.deletePost(db, "61e4271c7f49c4ade1bf8729");
+  //   console.log(posts);
   } catch (error) {
     console.log("An error occurred", error);
   }
