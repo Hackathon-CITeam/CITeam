@@ -754,9 +754,21 @@ const createPost = () => {
 };
 
 // TODO: editPost
+const editPost = () => {
+  return {
+     // TODO
+  };
+};
 
 // TODO: deletePost
+const deletePost = () => {
+  return {
+     // TODO
+  };
+};
 
 module.exports = {
   createPost: createPost,
+  editPost: editPost,
+  deletePost: deletePost,
 };

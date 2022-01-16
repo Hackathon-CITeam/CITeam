@@ -2,7 +2,9 @@
 // myPost vs allPost (different button)
 // Copy and paste your completed {...} code from Block Kit Builder to here
 const renderPost = () => {
-  return null;
+  return {
+    // TODO
+  };
 };
 
 module.exports = {
