@@ -6,7 +6,7 @@ const { MongoClient, ObjectId } = require('mongodb');
 // Import Uniform Resource Identifier for MongoDB cluster from .env file
 const url = process.env.MONGODB_URL;
 
-// // FUNCTION: Returns a new MongoClient object
+// FUNCTION: Returns a new MongoClient object
 // const newClient = function() {
 //   return new MongoClient(uri, { useUnifiedTopology: true });
 // }
@@ -21,7 +21,7 @@ const connect = async (url) => {
     return tmp;
   } catch (err) {
     console.error(err.message);
-    throw new Error('could not connect to the db');
+    throw new Error('Could not connect to the db');
   }
 };
 
@@ -43,11 +43,11 @@ const userExists = async function(db, userId) {
 // ARGUMENTS: userName (String), userId (String), userYear (String)
 const addUser = async (db, newUser) => {
   try {
-    const exist = await userExists(db, newUser.userId);
-    if (exist) {
-      console.log("User already exists in the database");
-      return;
-    }
+    // const exist = await userExists(db, newUser.userId);
+    // if (exist) {
+    //   console.log("User already exists in the database");
+    //   return;
+    // }
     const result = await db.collection('users').insertOne(newUser);
     console.log(`Created player with id: ${result.insertedId}`);
     return result;
@@ -57,8 +57,21 @@ const addUser = async (db, newUser) => {
   }
 };
 
+// FUNCTION: Adds a new post to the "posts" collection
+const addPost = async (db, newPost) => {
+  try {
+    const result = await db.collection('posts').insertOne(newPost);
+    console.log("Successfully created a new post!");
+    return result;
+  } catch (err) {
+    console.log(`error: ${err.message}`);
+    throw new Error('Error adding the post');
+  }
+};
+
 module.exports = {
   connect,
   userExists,
   addUser,
+  addPost,
 }
