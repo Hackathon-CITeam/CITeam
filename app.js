@@ -1,6 +1,9 @@
 // Require the Bolt package (github.com/slackapi/bolt)
 require('dotenv').config();
 
+// Import database operations
+const lib = require('./dbOperations');
+
 // Import other modules
 const views = require("./views");
 
@@ -13,6 +16,13 @@ const botToken = process.env.SLACK_BOT_TOKEN;
 const socketModeClient = new SocketModeClient({ appToken });
 
 const webclient = new WebClient(botToken);
+
+let db;
+async function func() {
+  db = await lib.connect(process.env.MONGODB_URL);
+};
+func();
+
 
 // Attach listeners to events by type. See: https://api.slack.com/events/message
 socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
@@ -98,39 +108,6 @@ socketModeClient.on('app_home_opened', async ({event, body, ack}) => {
               text: ":heart_eyes_cat: *Post Board*\nNo posts yet.",
             },
           },
-          // {
-          //   type: "actions",
-          //   elements: [
-          //     {
-          //       type: "button",
-          //       text: {
-          //         type: "plain_text",
-          //         text: "Create a new post",
-          //         emoji: true,
-          //       },
-          //       style: "primary",
-          //       value: "create_post",
-          //     },
-          //     {
-          //       type: "button",
-          //       text: {
-          //         type: "plain_text",
-          //         text: "View my posts",
-          //         emoji: true,
-          //       },
-          //       value: "my_posts",
-          //     },
-          //     {
-          //       type: "button",
-          //       text: {
-          //         type: "plain_text",
-          //         text: "View all posts",
-          //         emoji: true,
-          //       },
-          //       value: "all_posts",
-          //     },
-          //   ],
-          // },
         ],
       },
     });
