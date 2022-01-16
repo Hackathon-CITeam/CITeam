@@ -74,6 +74,22 @@ const addPost = async (db, newPost) => {
   }
 };
 
+// FUNCTION: Get a user by user id
+const getUserById = async (db, userId) => {
+  try {
+    const result = await db.collection("users").findOne({ userId: userId });
+    if (!result) {
+      console.log("The user does not exist!");
+    } else {
+      console.log(`Successfully retrieved the user ${userId}`);
+      return result;
+    }
+  } catch (err) {
+    console.log(`error: ${err.message}`);
+    throw new Error(`Error retrieving the user ${userId}`);
+  }
+};
+
 // FUNCTION: Return an array of all posts
 const getAllPosts = async (db) => {
   try {
@@ -99,35 +115,68 @@ const getAllPostsByUserId = async (db, userId) => {
   }
 };
 
-// FUNCTION: Edit a post
-// TODO: not by userId, by course name (?)
-const updatePost = async (db, updatedPost) => {
+// FUNCTION: Get a post by _id
+const getPostById = async (db, postId) => {
   try {
-    const userID = updatePost.userId;
-    const { userId, ...rest } = updatedPost;
+    // may change ObjectId(postId) later
+    const result = await db
+      .collection("posts")
+      .findOne({ _id: ObjectId(postId) });
+    if (!result) {
+      console.log("The post does not exist!");
+    } else {
+      console.log(`Successfully retrieved the post ${postId}`);
+      return result;
+    }
+  } catch (err) {
+    console.log(`error: ${err.message}`);
+    throw new Error(`Error retrieving the post ${postId}`);
+  }
+};
+
+// FUNCTION: Edit a post by post id
+const updatePost = async (db, postId, updatedPost) => {
+  try {
+    // console.log(postId);
+    // const { _id, ...rest } = updatedPost;
+    // console.log(updatePost);
     const result = await db.collection("posts").updateOne(
-      { userId: userID },
+      { _id: ObjectId(postId) },
       {
-        $set: updatePost,
-        $currentDate: { lastModified: true },
+        $set: updatedPost,
+        $currentDate: { lastModified: false },
       }
     );
-    console.log(`Successfully updated the post. Updated post: ${result}`);
-    return result;
+    console.log(`Successfully updated the post to be: ${result}`);
   } catch (err) {
     console.log(`error: ${err.message}`);
     throw new Error("Error updating the post");
   }
 };
 
-// FUNCTION TODO: Delete a post
+// FUNCTION TODO: Delete a post by post id
+const deletePost = async (db, postId) => {
+  try {
+    // may change ObjectId(postId) later
+    const result = await db
+      .collection("posts")
+      .deleteOne({ _id: ObjectId(postId) });
+    console.log(`Successfully deleted the post ${postId}`);
+  } catch (err) {
+    console.log(`error: ${err.message}`);
+    throw new Error(`Error deleting the post ${postId}`);
+  }
+};
 
 module.exports = {
   connect,
   userExists,
   addUser,
+  getUserById,
   addPost,
   getAllPosts,
   getAllPostsByUserId,
+  getPostById,
   updatePost,
+  deletePost,
 };
