@@ -1451,7 +1451,51 @@ const editPost = () => {
 // TODO: deletePost
 const deletePost = () => {
   return {
-     // TODO
+    "title": {
+      "type": "plain_text",
+      "text": "Delete Post",
+      "emoji": true
+    },
+    "submit": {
+      "type": "plain_text",
+      "text": "Confirm",
+      "emoji": true
+    },
+    "type": "modal",
+    "close": {
+      "type": "plain_text",
+      "text": "Cancel",
+      "emoji": true
+    },
+    "blocks": [
+      {
+        "type": "divider"
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "#Teams-Seren-CIT594\n:bust_in_silhouette:@Ruichen Zhang @Yihong Zhang @Seren Liu\n:books: CIT594 \n:raised_hands: Recruit for *2* teammates\n :sparkles: Java, Python"
+        }
+      },
+      {
+        "type": "divider"
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "*:bangbang:Are you sure delete the post?*"
+        }
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "*Note*: Deleting this post will not delete or archive the created channel."
+        }
+      }
+    ]
   };
 };
 
