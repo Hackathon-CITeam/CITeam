@@ -7,11 +7,6 @@ const post = require("./views/post");
 // Import Uniform Resource Identifier for MongoDB cluster from .env file
 const url = process.env.MONGODB_URL;
 
-// FUNCTION: Return a new MongoClient object
-// const newClient = function() {
-//   return new MongoClient(uri, { useUnifiedTopology: true });
-// }
-
 // FUNCTION: Connect to our db on the cloud
 const connect = async (url) => {
   try {
@@ -31,7 +26,6 @@ const connect = async (url) => {
 };
 
 // FUNCTION: Check if a user is already in "users" collection
-// ARGUMENTS: userId (String) - Slack ID
 const userExists = async function (db, userId) {
   try {
     const result = await db.collection("users").findOne({ userId: userId });
@@ -45,7 +39,6 @@ const userExists = async function (db, userId) {
 };
 
 // FUNCTION: Add a new user to the "users" collection
-// ARGUMENTS: userName (String), userId (String), userYear (String)
 const addUser = async (db, newUser) => {
   try {
     // const exist = await userExists(db, newUser.userId); // newUser.userId should be changed!
@@ -62,18 +55,6 @@ const addUser = async (db, newUser) => {
   }
 };
 
-// FUNCTION: Add a new post to the "posts" collection
-const addPost = async (db, newPost) => {
-  try {
-    const result = await db.collection("posts").insertOne(newPost);
-    console.log("Successfully created a new post!");
-    return result;
-  } catch (err) {
-    console.log(`error: ${err.message}`);
-    throw new Error("Error adding the post");
-  }
-};
-
 // FUNCTION: Get a user by user id
 const getUserById = async (db, userId) => {
   try {
@@ -87,6 +68,35 @@ const getUserById = async (db, userId) => {
   } catch (err) {
     console.log(`error: ${err.message}`);
     throw new Error(`Error retrieving the user ${userId}`);
+  }
+};
+
+// FUNCTION: Edit a user by user id
+const updateUser = async (db, userId, updatedUser) => {
+  try {
+    const result = await db.collection("users").updateOne(
+      { userId: userId },
+      {
+        $set: updatedUser,
+        $currentDate: { lastModified: false },
+      }
+    );
+    console.log(`Successfully updated the user to be: ${result}`);
+  } catch (err) {
+    console.log(`error: ${err.message}`);
+    throw new Error("Error updating the user");
+  }
+};
+
+// FUNCTION: Add a new post to the "posts" collection
+const addPost = async (db, newPost) => {
+  try {
+    const result = await db.collection("posts").insertOne(newPost);
+    console.log("Successfully created a new post!");
+    return result;
+  } catch (err) {
+    console.log(`error: ${err.message}`);
+    throw new Error("Error adding the post");
   }
 };
 
@@ -154,7 +164,7 @@ const updatePost = async (db, postId, updatedPost) => {
   }
 };
 
-// FUNCTION TODO: Delete a post by post id
+// FUNCTION: Delete a post by post id
 const deletePost = async (db, postId) => {
   try {
     // may change ObjectId(postId) later
@@ -173,6 +183,7 @@ module.exports = {
   userExists,
   addUser,
   getUserById,
+  updateUser,
   addPost,
   getAllPosts,
   getAllPostsByUserId,
