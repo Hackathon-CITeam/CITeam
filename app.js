@@ -46,7 +46,7 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
 socketModeClient.on("interactive", async ({ body, ack }) => {
   try {
     await ack();
-    console.log(body);
+    // console.log(body);
     if (body.actions[0].value === "create_profile") {
       await webclient.views.open({
         trigger_id: body.trigger_id,
@@ -68,6 +68,21 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
         view: post.createPost(),
       });
     }
+    console.log(body);
+    // For Testing Only
+    // await func();
+    // // store post id
+    // obj = {
+    //   userId: body.user.id,
+    //   name: name,
+    //   course: course,
+    //   expertise: skills,
+    //   member: member_ids,
+    //   capacity: team_capacity,
+    //   message: message,
+    // };
+    // const posts = await lib.updatePost(db, obj);
+    // console.log(posts);
   } catch (error) {
     console.log("An error occurred", error);
   }
@@ -113,7 +128,7 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
       const arr = Object.keys(data).map(function (k) {
         return data[k];
       });
-      console.log(arr);
+      // console.log(arr);
       const name = arr[0].post_enter_username.value;
       const course = arr[1].post_enter_course.selected_option.text.text;
       const skills = arr[2].post_enter_expertise.selected_options.map(
@@ -122,7 +137,7 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
       const member_ids = arr[3].post_enter_member.selected_users; // include self?
       const team_capacity = arr[4].post_enter_number.selected_option.text.text;
       const message = arr[5].post_enter_message.value;
-      // console.log(name, course, skills, member_ids, team_capacity, message);
+      console.log(name, course, skills, member_ids, team_capacity, message);
       const newPost = {
         userId: body.user.id,
         name: name,
