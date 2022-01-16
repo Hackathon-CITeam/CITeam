@@ -79,6 +79,10 @@ const renderHome = () => {
   };
 };
 
+// TODO: Add post board views to home (imported from postboard.js)
+
+// TODO: Change default view (e.g. no posts yet -> render posts, create profile -> button disappear)
+
 module.exports = {
   renderHome: renderHome,
 };
