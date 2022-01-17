@@ -228,9 +228,9 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
 });
 
 // CLICK BUTTON: add a new post to database
-// TODO: create a new channel
 socketModeClient.on("interactive", async ({ body, ack }) => {
   try {
+    console.log("in the func");
     await ack();
     if (body.view.callback_id === "modal_create_post") {
       const data = body.view.state.values;
@@ -257,7 +257,46 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
         message: message,
       };
       await func();
+      console.log("add post");
       await lib.addPost(db, newPost);
+
+      // create a channel and invite all the team members
+      let channel_name = "Team-";
+      const nospaceName = name.replace(/\s/g, '');
+      channel_name += nospaceName;
+      channel_name += '-';
+      const nospace = course.replace(/\s/g, '');
+      channel_name += nospace;
+      channel_name = channel_name.toLowerCase();
+      console.log(channel_name);
+      let result =  await webclient.conversations.create({
+        name: channel_name
+      });
+      console.log("here");
+      console.log(`result.data.ok ${result.data.ok}`);
+      // if the name is taken, we will increment to the string
+      // TODO: this part is not tested yet
+      while (!result.data.ok) {
+        let num = arseInt(channel_name[channel_name.length-1]);
+        if (num) {
+          num += 1
+          channel_name.replace(/.$/, num);
+        } else {
+          channel_name += '-1';
+        }
+        result = await webclient.conversations.create({
+          name: channel_name
+        });
+      }
+      console.log(result);  
+      let strings = member_ids.join(',');
+      strings += ", ";
+      strings += body.user.id;
+      const result2 = await webclient.conversations.invite({
+        channel: result.channel.id,
+        users: strings
+      });
+      console.log(result2);
     }
   } catch (error) {
     console.log("An error occurred", error);
@@ -272,7 +311,7 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
 
 (async () => {
   await socketModeClient.start();
-  console.log("⚡️ Bolt app is running!");
+  console.log("⚡️ Bolt app i running!");
 })();
 
 // TODO: Deployment using Heroku (We will use the following after we deploy the app.)
