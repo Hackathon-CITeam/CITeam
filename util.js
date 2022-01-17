@@ -1,6 +1,6 @@
 // "Seren Liu", "CIT 594" => "Teams-Seren-CIT594"
 const concatChannelName = (name, course) => {
-  return ["Teams", name.replace(/ /g, ""), course.replace(/ /g, "")].join('-');
+  return ["# Teams", name.replace(/ /g, ""), course.replace(/ /g, "")].join('-');
 }
 
 // "Seren Liu", "Ruichen Zhang" => "@Seren Liu @Ruchen Zhang"
