@@ -697,7 +697,7 @@ const createPost = () => {
 };
 
 // MODAL: Render the view for editing a post
-const editPost = () => {
+const editPost = (name) => {
   return {
     callback_id: "modal_edit_post",
     title: {
@@ -721,7 +721,7 @@ const editPost = () => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: "*Edit the post as you need*",
+          text: "*Edit the post as you need.*",
         },
       },
       {
@@ -738,7 +738,7 @@ const editPost = () => {
         type: "section",
         text: {
           type: "plain_text",
-          text: "Yihong Zhang",
+          text: `${name}`,
           emoji: true,
         },
       },

@@ -21,30 +21,12 @@
 5. After you have made some code changes on your branch, run `git add .`, `git commit -m "your commit message"`, `git push` to commit your change to your remote branch on GitHub. Note that you need to run `git push --set-upstream origin [your branch name]` **the first time** after you created your local branch. Only push codes to GitHub if you make sure that the app is not broken after your latest code change.
 6. Regularly push your code to GitHub, and make pull requests from main branch to fetch latest changes; talk to your other team members if you encounter a conflict and are not sure how to resolve it.
 
-### TODOs (Jan 16th)
+### TODOs (Jan 17th)
 
-1. app.js
- - 1.1 when creating a post, also generate a channel with channel info
- - 1.2 edit & delete a post (listen to event, i.e. button click)
- - 1.3 user joins channel
-2. DBOperations.js
- - 2.1 change schema & CRUD
-3. views/post.js
- - 3.1 edit & delete a post view
-4. views/postboard.js
- - 4.1 post detail view in post board (myPost & allPost)
-5. views/channel.js
- - same as 1.1
-6. views/home.js
- - 6.1 change home view (e,g. no post vs some posts, profile created or not)
-7. Others: deployment, more advanced features specified in PRD, etc.
-
-Proposed Work:
-* Member A: 1.1, 1.3 (Ruifan)
-* Member B: 1.2, 2.1 (Ruichen)
-* Member C: 3.1
-* Member D: 4.1
-* Save 6.1 for later
+1. Channel
+2. Bugfixes & Styling issues
+3. Deployment (App limitations: socket mode unstable, 100 items limit)
+4. Video demo & Submission
 
 ### Links
 

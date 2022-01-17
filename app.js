@@ -36,6 +36,8 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
 
     await func();
     const userExists = await lib.userExists(db, body.event.user);
+    // console.log("hello", body.event.user);
+    // console.log("hello", userExists);
     let blocks = home.renderDescription();
     if (!userExists) {
       blocks = blocks.concat(profile.defaultProfile());
@@ -53,19 +55,13 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
     await func();
     const myPosts = await lib.getAllPostsByUserId(db, body.event.user);
 
-    if (!allPosts || allPosts.length == 0) {
+    if ((!allPosts || allPosts.length == 0) && !userExists) {
       await webclient.views.publish({
         token: botToken,
         user_id: event.user,
         view: home.renderDefaultHome(),
       });
-    } else if (!allPosts || allPosts.length == 0) {
-      await webclient.views.publish({
-        token: botToken,
-        user_id: event.user,
-        view: home.renderDefaultHome(),
-      });
-    } else if (!myPosts || myPosts.length == 0) {
+    }  else if (!myPosts || myPosts.length == 0) {
       blocks = blocks.concat(home.myPostHeader());
       blocks = blocks.concat([
         {
@@ -205,6 +201,21 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
   }
 });
 
+// CLICK BUTTON: Prompt to create an edit profile view
+socketModeClient.on("interactive", async ({ body, ack }) => {
+  try {
+    await ack();
+    if (body.actions[0].value === "edit_profile") {
+      await webclient.views.open({
+        trigger_id: body.trigger_id,
+        view: profile.editProfile(),
+      });
+    }
+  } catch (error) {
+    console.log("An error occurred", error);
+  }
+});
+
 let editPostId = null;
 
 // CLICK BUTTON: Prompt to create an edit post view, and record post id
@@ -213,12 +224,12 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
     await ack();
     // console.log(body);
     if (body.actions[0].value === "mypost_edit") {
-      // editPostId = body.actions[0].action_id.split("_")[2];
-      //           await func();
-      // await lib.getPostById(db, editPostId);
+      editPostId = body.actions[0].action_id.split("_")[2];
+      await func();
+      const result = await lib.getUserById(db, body.user.id); // retrieve from Slack?
       await webclient.views.open({
         trigger_id: body.trigger_id,
-        view: post.editPost(name, course, expertise, member, capacity),
+        view: post.editPost(result.name),
       });
     }
   } catch (error) {
@@ -226,7 +237,42 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
   }
 });
 
-// TODO: Edit post confirm
+// Edit post confirm
+socketModeClient.on("interactive", async ({ body, ack }) => {
+  try {
+    await ack();
+    if (body.view.callback_id === "modal_edit_post") {
+      const data = body.view.state.values;
+      const arr = Object.keys(data).map(function (k) {
+        return data[k];
+      });
+      // console.log(arr);
+      await func();
+      const result = await lib.getUserById(db, body.user.id); // retrieve from Slack?
+      const course = arr[0].post_enter_course.selected_option.text.text;
+      const skills = arr[1].post_enter_expertise.selected_options.map(
+        (e) => e.text.text
+      );
+      const member_ids = arr[2].post_enter_member.selected_users;
+      const team_capacity = arr[3].post_enter_number.selected_option.text.text;
+      const message = arr[4].post_enter_message.value;
+      // console.log(name, course, skills, member_ids, team_capacity, message);
+      const updatedPost = {
+        userId: body.user.id,
+        name: result.name,
+        course: course,
+        expertise: skills,
+        member: member_ids,
+        capacity: team_capacity,
+        message: message,
+      };
+      await func();
+      await lib.updatePost(db, editPostId, updatedPost);
+    }
+  } catch (error) {
+    console.log("An error occurred", error);
+  }
+});
 
 let deletePostId = null;
 
@@ -305,6 +351,36 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
   }
 });
 
+// CLICK BUTTON: edit user profile
+socketModeClient.on("interactive", async ({ body, ack }) => {
+  try {
+    await ack();
+    if (body.view.callback_id === "modal_edit_profile") {
+      const data = body.view.state.values;
+      const arr = Object.keys(data).map(function (k) {
+        return data[k];
+      });
+      // console.log(arr);
+      const name = arr[0].profile_enter_username.value;
+      const year = arr[1].profile_enter_year.value;
+      const skills = arr[2].profile_enter_expertise.selected_options.map(
+        (e) => e.text.text
+      );
+      // console.log(name, year, skills, body.user.id);
+      const updatedUser = {
+        name: name,
+        graduation_year: year,
+        expertise: skills,
+        userId: body.user.id,
+      };
+      await func();
+      await lib.updateUser(db, body.user.id, updatedUser);
+    }
+  } catch (error) {
+    console.log("An error occurred", error);
+  }
+});
+
 // CLICK BUTTON: add a new post to database
 socketModeClient.on("interactive", async ({ body, ack }) => {
   try {
@@ -321,7 +397,7 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
       const skills = arr[2].post_enter_expertise.selected_options.map(
         (e) => e.text.text
       );
-      const member_ids = arr[3].post_enter_member.selected_users; // include self?
+      const member_ids = arr[3].post_enter_member.selected_users;
       const team_capacity = arr[4].post_enter_number.selected_option.text.text;
       const message = arr[5].post_enter_message.value;
       // console.log(name, course, skills, member_ids, team_capacity, message);
@@ -380,11 +456,6 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
     console.log("An error occurred", error);
   }
 });
-
-// TODO: Edit a post
-// socketModeClient.on("interactive", async ({ body, ack }) => {
-
-// });
 
 // TODO: Join Channel
 

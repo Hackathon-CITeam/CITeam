@@ -78,7 +78,7 @@ const updateUser = async (db, userId, updatedUser) => {
       { userId: userId },
       {
         $set: updatedUser,
-        $currentDate: { lastModified: false },
+        // $currentDate: { lastModified: false },
       }
     );
     console.log(`Successfully updated the user to be: ${result}`);
@@ -154,7 +154,7 @@ const updatePost = async (db, postId, updatedPost) => {
       { _id: ObjectId(postId) },
       {
         $set: updatedPost,
-        $currentDate: { lastModified: false },
+        // $currentDate: { lastModified: false },
       }
     );
     console.log(`Successfully updated the post to be: ${result}`);
