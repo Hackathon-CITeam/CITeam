@@ -167,7 +167,6 @@ const updatePost = async (db, postId, updatedPost) => {
 // FUNCTION: Delete a post by post id
 const deletePost = async (db, postId) => {
   try {
-    // may change ObjectId(postId) later
     const result = await db
       .collection("posts")
       .deleteOne({ _id: ObjectId(postId) });
