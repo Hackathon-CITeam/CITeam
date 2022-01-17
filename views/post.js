@@ -1,3 +1,5 @@
+const util = require("../util.js");
+
 // MODAL: Render the view for creating a new post
 const createPost = () => {
   return {
@@ -613,65 +615,6 @@ const createPost = () => {
           emoji: true,
         },
       },
-      // {
-      //   type: "input",
-      //   element: {
-      //     type: "multi_static_select",
-      //     placeholder: {
-      //       type: "plain_text",
-      //       text: "Select options",
-      //       emoji: true,
-      //     },
-      //     options: [
-      //       {
-      //         text: {
-      //           type: "plain_text",
-      //           text: "Ruichen Zhang",
-      //           emoji: true,
-      //         },
-      //         value: "value-0",
-      //       },
-      //       {
-      //         text: {
-      //           type: "plain_text",
-      //           text: "Ruifan Wang",
-      //           emoji: true,
-      //         },
-      //         value: "value-1",
-      //       },
-      //       {
-      //         text: {
-      //           type: "plain_text",
-      //           text: "Jiayun(Seren) Liu",
-      //           emoji: true,
-      //         },
-      //         value: "value-2",
-      //       },
-      //       {
-      //         text: {
-      //           type: "plain_text",
-      //           text: "Wentao Xu",
-      //           emoji: true,
-      //         },
-      //         value: "value-3",
-      //       },
-      //       {
-      //         text: {
-      //           type: "plain_text",
-      //           text: "Yihong(Joanne) Zhang",
-      //           emoji: true,
-      //         },
-      //         value: "value-4",
-      //       },
-      //     ],
-      //     action_id: "post_enter_member",
-      //   },
-      //   label: {
-      //     type: "plain_text",
-      //     text: "Current Member (Optional)",
-      //     emoji: true,
-      //   },
-      // },
       {
         type: "input",
         element: {
@@ -756,7 +699,7 @@ const createPost = () => {
 // MODAL: Render the view for editing a post
 const editPost = () => {
   return {
-     callback_id: "modal_edit_post",
+    callback_id: "modal_edit_post",
     title: {
       type: "plain_text",
       text: "Edit Post",
@@ -785,19 +728,19 @@ const editPost = () => {
         type: "divider",
       },
       {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "*Your Name*"
-        }
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: "*Your Name*",
+        },
       },
       {
-        "type": "section",
-        "text": {
-          "type": "plain_text",
-          "text": "Yihong Zhang",
-          "emoji": true
-        }
+        type: "section",
+        text: {
+          type: "plain_text",
+          text: "Yihong Zhang",
+          emoji: true,
+        },
       },
       {
         type: "input",
@@ -1447,54 +1390,60 @@ const editPost = () => {
   };
 };
 
-// TODO: deletePost
-const deletePost = () => {
+// MODAL: Render the view for deletng a post
+const deletePost = (name, course, expertise, member, capacity) => {
   return {
-    "title": {
-      "type": "plain_text",
-      "text": "Delete Post",
-      "emoji": true
+    callback_id: "modal_delete_post",
+    title: {
+      type: "plain_text",
+      text: "Delete Post",
+      emoji: true,
     },
-    "submit": {
-      "type": "plain_text",
-      "text": "Confirm",
-      "emoji": true
+    submit: {
+      type: "plain_text",
+      text: "Confirm",
+      emoji: true,
     },
-    "type": "modal",
-    "close": {
-      "type": "plain_text",
-      "text": "Cancel",
-      "emoji": true
+    type: "modal",
+    close: {
+      type: "plain_text",
+      text: "Cancel",
+      emoji: true,
     },
-    "blocks": [
+    blocks: [
       {
-        "type": "divider"
+        type: "divider",
       },
       {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "#Teams-Seren-CIT594\n:bust_in_silhouette:@Ruichen Zhang @Yihong Zhang @Seren Liu\n:books: CIT594 \n:raised_hands: Recruit for *2* teammates\n :sparkles: Java, Python"
-        }
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: `${util.concatChannelName(name, course)}   ${
+            member.length + 1
+          } members\n:bust_in_silhouette:${util.concatMemberName(
+            name,
+            member
+          )}\n:books: ${course}\n:raised_hands: Recruit for *${capacity}* teammates\n :sparkles: ${expertise}`,
+        },
       },
       {
-        "type": "divider"
+        type: "divider",
       },
       {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "*:bangbang:Are you sure delete the post?*"
-        }
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: "*:bangbang:Are you sure you want to delete the post?*",
+        },
       },
       {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "*Note*: Deleting this post will not delete or archive the created channel."
-        }
-      }
-    ]
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: "*Note*: Deleting this post will not delete or archive the created channel.",
+        },
+      },
+    ],
   };
 };
 

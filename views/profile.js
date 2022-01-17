@@ -174,19 +174,182 @@ const createProfile = () => {
   };
 };
 
+// View existing profile component
 const viewProfile = (name, year, expertise) => {
   return [
     {
       type: "section",
       text: {
-        type: "mrkdwn",
-        text: `Name: @${name}\nGraduation Year: ${year}\nExpertise: ${expertise}\n`,
+        type: "plain_text",
+        text: " ",
+        emoji: true,
       },
+    },
+    {
+      type: "section",
+      text: {
+        type: "plain_text",
+        text: " ",
+        emoji: true,
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: " ",
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: " ",
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: " ",
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: " ",
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: ":bookmark: *Your Profile*",
+      },
+    },
+    {
+      type: "context",
+      elements: [
+        {
+          type: "plain_text",
+          text: "View your profile.",
+          emoji: true,
+        },
+      ],
+    },
+    {
+      type: "divider",
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `*Name:* @${name}\n*Graduation Year:* ${year}\n*Expertise:* ${expertise}\n`,
+      },
+    },
+    // TODO: add "Edit Profile" button
+  ];
+};
+
+// Default create profile prompt component
+const defaultProfile = () => {
+  return [
+    {
+      type: "section",
+      text: {
+        type: "plain_text",
+        text: " ",
+        emoji: true,
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "plain_text",
+        text: " ",
+        emoji: true,
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: " ",
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: " ",
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: " ",
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: " ",
+      },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: ":bookmark: *Your Profile*",
+      },
+    },
+    {
+      type: "context",
+      elements: [
+        {
+          type: "plain_text",
+          text: "View your profile.",
+          emoji: true,
+        },
+      ],
+    },
+    {
+      type: "divider",
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: "*Want to get started? Click to create profile.*",
+      },
+    },
+    {
+      type: "actions",
+      elements: [
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Create Profile",
+            emoji: true,
+          },
+          style: "primary",
+          value: "create_profile",
+          action_id: "create_profile",
+        },
+      ],
+    },
+    {
+      type: "divider",
     },
   ];
 };
 
 module.exports = {
   createProfile: createProfile,
+  defaultProfile: defaultProfile,
   viewProfile: viewProfile,
 };

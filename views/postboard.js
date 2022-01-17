@@ -16,7 +16,7 @@ const renderMyPost = (
       text: {
         type: "mrkdwn",
         text: `${util.concatChannelName(name, course)}   ${
-          member.length
+          member.length + 1
         } members\n:bust_in_silhouette:${util.concatMemberName(
           name,
           member
@@ -80,23 +80,12 @@ const renderAllPost = (
       text: {
         type: "mrkdwn",
         text: `${util.concatChannelName(name, course)}   ${
-          member.length
+          member.length + 1
         } members\n:bust_in_silhouette:${util.concatMemberName(
           name,
           member
         )}\n:books: ${course}\n:raised_hands: Recruit for *${capacity}* teammates\n :sparkles: ${expertise}`,
       },
-      // accessory: {
-      //   type: "button",
-      //   text: {
-      //     type: "plain_text",
-      //     text: "Join Channel",
-      //     emoji: true,
-      //   },
-      //   style: "primary",
-      //   value: "join_channel",
-      //   action_id: "join_channel",
-      // },
     },
     {
       type: "section",

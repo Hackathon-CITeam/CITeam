@@ -35,28 +35,81 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
     await ack();
 
     await func();
+    const userExists = await lib.userExists(db, body.event.user);
+    let blocks = home.renderDescription();
+    if (!userExists) {
+      blocks = blocks.concat(profile.defaultProfile());
+    } else {
+      await func();
+      const user = await lib.getUserById(db, body.event.user);
+      blocks = blocks.concat(
+        profile.viewProfile(user.name, user.graduation_year, user.expertise)
+      );
+    }
+
+    await func();
     const allPosts = await lib.getAllPosts(db);
-    // check if user exists first?
+
     await func();
     const myPosts = await lib.getAllPostsByUserId(db, body.event.user);
 
-    let blocks = home.createProfilePrompt();
-    
     if (!allPosts || allPosts.length == 0) {
       await webclient.views.publish({
         token: botToken,
         user_id: event.user,
         view: home.renderDefaultHome(),
       });
-    } else if (!myPosts || myPosts.length == 0) {
-      // TODO
+    } else if (!allPosts || allPosts.length == 0) {
       await webclient.views.publish({
         token: botToken,
         user_id: event.user,
         view: home.renderDefaultHome(),
       });
-    } else {
+    } else if (!myPosts || myPosts.length == 0) {
+      blocks = blocks.concat(home.myPostHeader());
+      blocks = blocks.concat([
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: "*You don't have any posts yet.*",
+          },
+        },
+      ]);
+      let allPostViews = home.allPostHeader();
+      allPostViews = blocks.concat(allPostViews);
 
+      for (const post of allPosts) {
+        let member = [];
+        for (const userId of post.member) {
+          const userProfile = await webclient.users.profile.get({
+            user: userId,
+          });
+          member.push(userProfile.profile.display_name);
+        }
+
+        let allPostView = postboard.renderAllPost(
+          post._id,
+          post.name,
+          post.course,
+          post.expertise,
+          member,
+          post.capacity,
+          post.message
+        );
+        allPostViews = allPostViews.concat(allPostView);
+      }
+
+      await webclient.views.publish({
+        token: botToken,
+        user_id: event.user,
+        view: {
+          type: "home",
+          callback_id: "home_view",
+          blocks: allPostViews,
+        },
+      });
+    } else {
       let myPostViews = home.myPostHeader();
 
       for (const post of myPosts) {
@@ -65,7 +118,7 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
           const userProfile = await webclient.users.profile.get({
             user: userId,
           });
-          member.push(member.push(userProfile.profile.display_name));
+          member.push(userProfile.profile.display_name);
         }
         let myPostView = postboard.renderMyPost(
           post._id,
@@ -147,22 +200,76 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
         view: post.createPost(),
       });
     }
+  } catch (error) {
+    console.log("An error occurred", error);
+  }
+});
+
+let editPostId = null;
+
+// CLICK BUTTON: Prompt to create an edit post view, and record post id
+socketModeClient.on("interactive", async ({ body, ack }) => {
+  try {
+    await ack();
     // console.log(body);
-    // For Testing Only
-    // await func();
-    // const result = await lib.getUserById(db, "U02C2CKDF38");
-    // console.log(result);
-    //   await func();
-    //   // store post id
-    //   obj = {
-    //     course: "CIT 596",
-    //     expertise: ["Java"],
-    //     member: ["U01F5ADBG1K"],
-    //     capacity: 4,
-    //     message: "hey",
-    //   };
-    //   const posts = await lib.deletePost(db, "61e4271c7f49c4ade1bf8729");
-    //   console.log(posts);
+    if (body.actions[0].value === "mypost_edit") {
+      // editPostId = body.actions[0].action_id.split("_")[2];
+      //           await func();
+      // await lib.getPostById(db, editPostId);
+      await webclient.views.open({
+        trigger_id: body.trigger_id,
+        view: post.editPost(name, course, expertise, member, capacity),
+      });
+    }
+  } catch (error) {
+    console.log("An error occurred", error);
+  }
+});
+
+// TODO: Edit post confirm
+
+let deletePostId = null;
+
+// CLICK BUTTON: Prompt to create a delete post view, and record post id
+socketModeClient.on("interactive", async ({ body, ack }) => {
+  try {
+    await ack();
+    // console.log(body);
+    if (body.actions[0].value === "mypost_delete") {
+      deletePostId = body.actions[0].action_id.split("_")[2];
+      await func();
+      const result = await lib.getPostById(db, deletePostId);
+      let member = [];
+      for (const userId of result.member) {
+        const userProfile = await webclient.users.profile.get({
+          user: userId,
+        });
+        member.push(userProfile.profile.display_name);
+      }
+      await webclient.views.open({
+        trigger_id: body.trigger_id,
+        view: post.deletePost(
+          result.name,
+          result.course,
+          result.expertise,
+          member,
+          result.capacity
+        ),
+      });
+    }
+  } catch (error) {
+    console.log("An error occurred", error);
+  }
+});
+
+// Delete post confirm
+socketModeClient.on("interactive", async ({ body, ack }) => {
+  try {
+    await ack();
+    if (body.view.callback_id === "modal_delete_post") {
+      await func();
+      await lib.deletePost(db, deletePostId);
+    }
   } catch (error) {
     console.log("An error occurred", error);
   }
@@ -201,7 +308,7 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
 // CLICK BUTTON: add a new post to database
 socketModeClient.on("interactive", async ({ body, ack }) => {
   try {
-    console.log("in the func");
+    // console.log("in the func");
     await ack();
     if (body.view.callback_id === "modal_create_post") {
       const data = body.view.state.values;
@@ -228,46 +335,46 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
         message: message,
       };
       await func();
-      console.log("add post");
+      // console.log("add post");
       await lib.addPost(db, newPost);
 
       // create a channel and invite all the team members
       let channel_name = "Team-";
-      const nospaceName = name.replace(/\s/g, '');
+      const nospaceName = name.replace(/\s/g, "");
       channel_name += nospaceName;
-      channel_name += '-';
-      const nospace = course.replace(/\s/g, '');
+      channel_name += "-";
+      const nospace = course.replace(/\s/g, "");
       channel_name += nospace;
       channel_name = channel_name.toLowerCase();
-      console.log(channel_name);
-      let result =  await webclient.conversations.create({
-        name: channel_name
+      // console.log(channel_name);
+      let result = await webclient.conversations.create({
+        name: channel_name,
       });
-      console.log("here");
-      console.log(`result.data.ok ${result.data.ok}`);
+      // console.log("here");
+      // console.log(`result.data.ok ${result.data.ok}`);
       // if the name is taken, we will increment to the string
       // TODO: this part is not tested yet
       while (!result.data.ok) {
-        let num = arseInt(channel_name[channel_name.length-1]);
+        let num = arseInt(channel_name[channel_name.length - 1]);
         if (num) {
-          num += 1
+          num += 1;
           channel_name.replace(/.$/, num);
         } else {
-          channel_name += '-1';
+          channel_name += "-1";
         }
         result = await webclient.conversations.create({
-          name: channel_name
+          name: channel_name,
         });
       }
-      console.log(result);  
-      let strings = member_ids.join(',');
+      // console.log(result);
+      let strings = member_ids.join(",");
       strings += ", ";
       strings += body.user.id;
       const result2 = await webclient.conversations.invite({
         channel: result.channel.id,
-        users: strings
+        users: strings,
       });
-      console.log(result2);
+      // console.log(result2);
     }
   } catch (error) {
     console.log("An error occurred", error);
@@ -276,47 +383,14 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
 
 // TODO: Edit a post
 // socketModeClient.on("interactive", async ({ body, ack }) => {
-//   try {
-//     await ack();
-//     if (body.view.callback_id === "modal_create_post") {
-//       const data = body.view.state.values;
-//       const arr = Object.keys(data).map(function (k) {
-//         return data[k];
-//       });
-//       // console.log(arr);
-//       const name = arr[0].post_enter_username.value;
-//       const course = arr[1].post_enter_course.selected_option.text.text;
-//       const skills = arr[2].post_enter_expertise.selected_options.map(
-//         (e) => e.text.text
-//       );
-//       const member_ids = arr[3].post_enter_member.selected_users; // include self?
-//       const team_capacity = arr[4].post_enter_number.selected_option.text.text;
-//       const message = arr[5].post_enter_message.value;
-//       // console.log(name, course, skills, member_ids, team_capacity, message);
-//       const newPost = {
-//         userId: body.user.id,
-//         name: name,
-//         course: course,
-//         expertise: skills,
-//         member: member_ids,
-//         capacity: team_capacity,
-//         message: message,
-//       };
-//       await func();
-//       await lib.addPost(db, newPost);
-//     }
-//   } catch (error) {
-//     console.log("An error occurred", error);
-//   }
-// });
 
-// TODO: Delete a post
+// });
 
 // TODO: Join Channel
 
 (async () => {
   await socketModeClient.start();
-  console.log("⚡️ Bolt app i running!");
+  console.log("⚡️ Bolt app is running!");
 })();
 
 // TODO: Deployment using Heroku (We will use the following after we deploy the app.)
