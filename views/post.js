@@ -29,6 +29,16 @@ const createPost = () => {
         },
       },
       {
+			"type": "context",
+			"elements": [
+				{
+					"type": "plain_text",
+					"text": "You and current members will join a channel automatically upon post creation.",
+					"emoji": true
+				}
+			]
+		},
+      {
         type: "divider",
       },
       {
