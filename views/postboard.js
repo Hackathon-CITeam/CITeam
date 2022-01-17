@@ -1,166 +1,117 @@
-// TODO: Render each post in the post board on home page
-// myPost vs allPost (different button)
-// Copy and paste your completed {...} code from Block Kit Builder to here
-const renderPost = () => {
-  return {
-    "blocks":[
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "#ChannelName   2 members"
-        }
+const util = require("../util.js");
+
+// Render my posts on home page
+const renderMyPost = (
+  postId,
+  name,
+  course,
+  expertise,
+  member,
+  capacity,
+  message
+) => {
+  return [
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `${util.concatChannelName(name, course)}   ${
+          member.length
+        } members\n:bust_in_silhouette:${util.concatMemberName(
+          name,
+          member
+        )}\n:books: ${course}\n:raised_hands: Recruit for *${capacity}* teammates\n :sparkles: ${expertise}`,
       },
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "#Teams-Seren-CIT594\n:bust_in_silhouette:@Ruichen Zhang @Yihong Zhang @Seren Liu\n:books: CIT594 \n:raised_hands: Recruit for *2* teammates\n :sparkles: Java, Python"
-        }
+    },
+    {
+      type: "section",
+      text: {
+        type: "plain_text",
+        text: `${message}`,
+        emoji: true,
       },
-      {
-        "type": "section",
-        "text": {
-          "type": "plain_text",
-          "text": "Description.",
-          "emoji": true
-        }
-      },
-      {
-        "type": "actions",
-        "elements": [
-          {
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "text": "Edit",
-              "emoji": true
-            },
-            "value": "click_me_123",
-            "style": "primary",
-            "action_id": "actionId-0"
+    },
+    {
+      type: "actions",
+      elements: [
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Edit",
+            emoji: true,
           },
-          {
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "text": "Delete",
-              "emoji": true
-            },
-            "value": "click_me_123",
-            "style": "danger",
-            "action_id": "actionId-1"
-          }
-        ]
-      },
-      {
-        "type": "divider"
-      },
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "#ChannelName   2 members"
-        }
-      },
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "#Teams-Seren-CIT594\n:bust_in_silhouette:@Ruichen Zhang @Yihong Zhang @Seren Liu\n:books: CIT594 \n:raised_hands: Recruit for *2* teammates\n :sparkles: Java, Python"
-        }
-      },
-      {
-        "type": "section",
-        "text": {
-          "type": "plain_text",
-          "text": "Description.",
-          "emoji": true
-        }
-      },
-      {
-        "type": "actions",
-        "elements": [
-          {
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "text": "Edit",
-              "emoji": true
-            },
-            "value": "click_me_123",
-            "style": "primary",
-            "action_id": "actionId-0"
+          value: "mypost_edit",
+          style: "primary",
+          action_id: `mypost_edit_${postId}`,
+        },
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: "Delete",
+            emoji: true,
           },
-          {
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "text": "Delete",
-              "emoji": true
-            },
-            "value": "click_me_123",
-            "style": "danger",
-            "action_id": "actionId-1"
-          }
-        ]
+          value: "mypost_delete",
+          style: "danger",
+          action_id: `mypost_delete_${postId}`,
+        },
+      ],
+    },
+    {
+      type: "divider",
+    },
+  ];
+};
+
+// Render all posts on home page
+const renderAllPost = (
+  postId,
+  name,
+  course,
+  expertise,
+  member,
+  capacity,
+  message
+) => {
+  return [
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `${util.concatChannelName(name, course)}   ${
+          member.length
+        } member\n:bust_in_silhouette:${util.concatMemberName(
+          name, member
+        )}\n:books: ${course}\n:raised_hands: Recruit for *${capacity}* teammates\n :sparkles: ${expertise}`,
       },
-      {
-        "type": "divider"
+      accessory: {
+        type: "button",
+        text: {
+          type: "plain_text",
+          text: "Join Channel",
+          emoji: true,
+        },
+        style: "primary",
+        value: "join_channel",
+        action_id: "join_channel",
       },
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "#ChannelName   2 members"
-        }
+    },
+    {
+      type: "section",
+      text: {
+        type: "plain_text",
+        text: `${message}`,
+        emoji: true,
       },
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": "#Teams-Seren-CIT594\n:bust_in_silhouette:@Ruichen Zhang @Yihong Zhang @Seren Liu\n:books: CIT594 \n:raised_hands: Recruit for *2* teammates\n :sparkles: Java, Python"
-        }
-      },
-      {
-        "type": "section",
-        "text": {
-          "type": "plain_text",
-          "text": "Description.",
-          "emoji": true
-        }
-      },
-      {
-        "type": "actions",
-        "elements": [
-          {
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "text": "Edit",
-              "emoji": true
-            },
-            "value": "click_me_123",
-            "style": "primary",
-            "action_id": "actionId-0"
-          },
-          {
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "text": "Delete",
-              "emoji": true
-            },
-            "value": "click_me_123",
-            "style": "danger",
-            "action_id": "actionId-1"
-          }
-        ]
-      }
-    ]
-  };
+    },
+    {
+      type: "divider",
+    },
+  ];
 };
 
 module.exports = {
-  renderPost: renderPost,
+  renderMyPost: renderMyPost,
+  renderAllPost: renderAllPost,
 };

@@ -609,7 +609,7 @@ const createPost = () => {
         },
         label: {
           type: "plain_text",
-          text: "Current Member(s)",
+          text: "Current Members",
           emoji: true,
         },
       },
@@ -1363,7 +1363,7 @@ const editPost = () => {
         },
         label: {
           type: "plain_text",
-          text: "Current Member(s)",
+          text: "Current Members",
           emoji: true,
         },
       },
