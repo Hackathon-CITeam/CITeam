@@ -665,6 +665,22 @@ const createPost = () => {
               },
               value: "value-4",
             },
+            {
+              text: {
+                type: "plain_text",
+                text: "5-10",
+                emoji: true,
+              },
+              value: "value-5",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: ">10",
+                emoji: true,
+              },
+              value: "value-6",
+            },
           ],
           action_id: "post_enter_number",
         },
@@ -1358,6 +1374,22 @@ const editPost = (name) => {
                 emoji: true,
               },
               value: "value-4",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: "5-10",
+                emoji: true,
+              },
+              value: "value-5",
+            },
+            {
+              text: {
+                type: "plain_text",
+                text: ">10",
+                emoji: true,
+              },
+              value: "value-6",
             },
           ],
           action_id: "post_enter_number",
