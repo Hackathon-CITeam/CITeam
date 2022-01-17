@@ -36,21 +36,19 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
 
     await func();
     const allPosts = await lib.getAllPosts(db);
-    // console.log(allPosts.length);
-    // console.log(body);
-
+    // check if user exists first?
     await func();
-    // check if user exists first
     const myPosts = await lib.getAllPostsByUserId(db, body.event.user);
-    // console.log(myPosts.length);
 
-    if (allPosts.length == 0 && myPosts.length == 0) {
+    let blocks = home.createProfilePrompt();
+    
+    if (!allPosts || allPosts.length == 0) {
       await webclient.views.publish({
         token: botToken,
         user_id: event.user,
         view: home.renderDefaultHome(),
       });
-    } else if (myPosts.length == 0) {
+    } else if (!myPosts || myPosts.length == 0) {
       // TODO
       await webclient.views.publish({
         token: botToken,
@@ -58,7 +56,6 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
         view: home.renderDefaultHome(),
       });
     } else {
-      let blocks = home.createProfilePrompt();
 
       let myPostViews = home.myPostHeader();
 
@@ -82,11 +79,11 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
         myPostViews = myPostViews.concat(myPostView);
       }
 
-      blocks = blocks.concat(myPostViews);
+      myPostViews = blocks.concat(myPostViews);
 
       let allPostViews = home.allPostHeader();
 
-      allPostViews = blocks.concat(allPostViews);
+      allPostViews = myPostViews.concat(allPostViews);
 
       for (const post of allPosts) {
         let member = [];

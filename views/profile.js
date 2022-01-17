@@ -174,6 +174,19 @@ const createProfile = () => {
   };
 };
 
+const viewProfile = (name, year, expertise) => {
+  return [
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `Name: @${name}\nGraduation Year: ${year}\nExpertise: ${expertise}\n`,
+      },
+    },
+  ];
+};
+
 module.exports = {
   createProfile: createProfile,
+  viewProfile: viewProfile,
 };

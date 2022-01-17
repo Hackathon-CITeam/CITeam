@@ -753,10 +753,9 @@ const createPost = () => {
   };
 };
 
-// TODO: editPost
+// MODAL: Render the view for editing a post
 const editPost = () => {
   return {
-     // TODO
      callback_id: "modal_edit_post",
     title: {
       type: "plain_text",

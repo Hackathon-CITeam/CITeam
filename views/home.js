@@ -125,6 +125,13 @@ const createProfilePrompt = () => {
       },
     },
     {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: " ",
+      },
+    },
+    {
       type: "divider",
     },
     {
@@ -171,6 +178,26 @@ const createProfilePrompt = () => {
         type: "mrkdwn",
         text: " ",
       },
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: ":bookmark: *Your Profile*",
+      },
+    },
+    {
+      type: "context",
+      elements: [
+        {
+          type: "plain_text",
+          text: "View and edit your profile.",
+          emoji: true,
+        },
+      ],
+    },
+    {
+      type: "divider",
     },
     {
       type: "section",
