@@ -1455,7 +1455,9 @@ const deletePost = (name, course, expertise, member, capacity) => {
           } members\n:bust_in_silhouette:${util.concatMemberName(
             name,
             member
-          )}\n:books: ${course}\n:raised_hands: Recruit for *${capacity}* teammates\n :sparkles: ${expertise}`,
+          )}\n:books: ${course}\n:raised_hands: Recruit for *${capacity}* teammates\n :sparkles: ${expertise.join(
+            ", "
+          )}`,
         },
       },
       {
