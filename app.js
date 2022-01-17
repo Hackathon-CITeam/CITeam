@@ -37,8 +37,6 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
 
     await func();
     const userExists = await lib.userExists(db, body.event.user);
-    // console.log("hello", body.event.user);
-    // console.log("hello", userExists);
     let blocks = home.renderDescription();
     if (!userExists) {
       blocks = blocks.concat(profile.defaultProfile());
@@ -62,7 +60,7 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
         user_id: event.user,
         view: home.renderDefaultHome(),
       });
-    }  else if (!myPosts || myPosts.length == 0) {
+    } else if (!myPosts || myPosts.length == 0) {
       blocks = blocks.concat(home.myPostHeader());
       blocks = blocks.concat([
         {
@@ -402,18 +400,6 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
       const team_capacity = arr[4].post_enter_number.selected_option.text.text;
       const message = arr[5].post_enter_message.value;
       // console.log(name, course, skills, member_ids, team_capacity, message);
-      const newPost = {
-        userId: body.user.id,
-        name: name,
-        course: course,
-        expertise: skills,
-        member: member_ids,
-        capacity: team_capacity,
-        message: message,
-      };
-      await func();
-      // console.log("add post");
-      await lib.addPost(db, newPost);
 
       // create a channel and invite all the team members
       let channel_name = "Team-";
@@ -423,9 +409,12 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
       const nospace = course.replace(/\s/g, "");
       channel_name += nospace;
       channel_name = channel_name.toLowerCase();
-      // console.log(channel_name);
       let result = await webclient.conversations.create({
         name: channel_name,
+      });
+      await webclient.conversations.setTopic({
+        channel: result.channel.id,
+        topic: `Recruiting ${team_capacity} teammates for ${course}.`,
       });
       // console.log("here");
       // console.log(`result.data.ok ${result.data.ok}`);
@@ -451,6 +440,20 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
         users: strings,
       });
       // console.log(result2);
+
+      const newPost = {
+        userId: body.user.id,
+        name: name,
+        course: course,
+        expertise: skills,
+        member: member_ids,
+        capacity: team_capacity,
+        message: message,
+        channelId: result.channel.id,
+      };
+      await func();
+      // console.log("add post");
+      await lib.addPost(db, newPost);
     }
   } catch (error) {
     console.log("An error occurred", error);
@@ -496,8 +499,15 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
   try {
     await ack();
     // console.log(body);
+    await func();
+    const postResult = await lib.getPostById(db, joinChannelId);
     if (body.view.callback_id === "modal_join_channel") {
-      // TODO: join channel
+  
+    // let channels = await webclient.conversations.list();
+    // console.log(channels);   
+      await webclient.conversations.join({
+        channel: postResult.channelId,
+      });
     }
   } catch (error) {
     console.log("An error occurred", error);
