@@ -7,6 +7,7 @@ const home = require("./views/home");
 const post = require("./views/post");
 const postboard = require("./views/postboard");
 const profile = require("./views/profile");
+const channel = require("./views/channel");
 
 const { SocketModeClient } = require("@slack/socket-mode");
 const { WebClient } = require("@slack/web-api");
@@ -428,20 +429,19 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
       });
       // console.log("here");
       // console.log(`result.data.ok ${result.data.ok}`);
-      // if the name is taken, we will increment to the string
-      // TODO: this part is not tested yet
-      while (!result.data.ok) {
-        let num = arseInt(channel_name[channel_name.length - 1]);
-        if (num) {
-          num += 1;
-          channel_name.replace(/.$/, num);
-        } else {
-          channel_name += "-1";
-        }
-        result = await webclient.conversations.create({
-          name: channel_name,
-        });
-      }
+      // Handling duplicate channel name: if the name is taken, we will increment to the string
+      // while (!result.data.ok) {
+      //   let num = arseInt(channel_name[channel_name.length - 1]);
+      //   if (num) {
+      //     num += 1;
+      //     channel_name.replace(/.$/, num);
+      //   } else {
+      //     channel_name += "-1";
+      //   }
+      //   result = await webclient.conversations.create({
+      //     name: channel_name,
+      //   });
+      // }
       // console.log(result);
       let strings = member_ids.join(",");
       strings += ", ";
@@ -457,7 +457,52 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
   }
 });
 
-// TODO: Join Channel
+let joinChannelId = null;
+
+// CLICK BUTTON: User joins a channel
+socketModeClient.on("interactive", async ({ body, ack }) => {
+  try {
+    await ack();
+    // console.log(body);
+    if (body.actions[0].value === "join_channel") {
+      joinChannelId = body.actions[0].action_id.split("_")[2];
+      await func();
+      const result = await lib.getPostById(db, joinChannelId);
+      let member = [];
+      for (const userId of result.member) {
+        const userProfile = await webclient.users.profile.get({
+          user: userId,
+        });
+        member.push(userProfile.profile.display_name);
+      }
+      await webclient.views.open({
+        trigger_id: body.trigger_id,
+        view: channel.joinChannel(
+          result.name,
+          result.course,
+          result.expertise,
+          member,
+          result.capacity
+        ),
+      });
+    }
+  } catch (error) {
+    console.log("An error occurred", error);
+  }
+});
+
+// Confirm join channel
+socketModeClient.on("interactive", async ({ body, ack }) => {
+  try {
+    await ack();
+    // console.log(body);
+    if (body.view.callback_id === "modal_join_channel") {
+      // TODO: join channel
+    }
+  } catch (error) {
+    console.log("An error occurred", error);
+  }
+});
 
 (async () => {
   await socketModeClient.start();

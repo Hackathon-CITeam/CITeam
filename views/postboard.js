@@ -111,7 +111,7 @@ const renderAllPost = (
           },
           value: "join_channel",
           style: "primary",
-          action_id: "join_channel",
+          action_id: `join_channel_${postId}`,
         },
       ],
     },
