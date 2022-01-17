@@ -78,7 +78,7 @@ const updateUser = async (db, userId, updatedUser) => {
       { userId: userId },
       {
         $set: updatedUser,
-        $currentDate: { lastModified: false },
+        // $currentDate: { lastModified: false },
       }
     );
     console.log(`Successfully updated the user to be: ${result}`);
