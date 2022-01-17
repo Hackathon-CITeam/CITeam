@@ -245,7 +245,7 @@ const viewProfile = (name, year, expertise) => {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `*Name:* @${name}\n*Graduation Year:* ${year}\n*Expertise:* ${expertise.join(
+        text: `*Name:* ${name}\n*Graduation Year:* ${year}\n*Expertise:* ${expertise.join(
           ", "
         )}\n`,
       },

@@ -402,7 +402,7 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
       // console.log(name, course, skills, member_ids, team_capacity, message);
 
       // create a channel and invite all the team members
-      let channel_name = "Team-";
+      let channel_name = "CITeams-";
       const nospaceName = name.replace(/\s/g, "");
       channel_name += nospaceName;
       channel_name += "-";
