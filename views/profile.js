@@ -233,7 +233,7 @@ const viewProfile = (name, year, expertise) => {
       elements: [
         {
           type: "plain_text",
-          text: "View your profile.",
+          text: "View and edit your profile.",
           emoji: true,
         },
       ],
@@ -326,7 +326,7 @@ const defaultProfile = () => {
       elements: [
         {
           type: "plain_text",
-          text: "View your profile.",
+          text: "View and edit your profile.",
           emoji: true,
         },
       ],
