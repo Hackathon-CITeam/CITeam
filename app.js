@@ -51,6 +51,7 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
         view: home.renderDefaultHome(),
       });
     } else if (myPosts.length == 0) {
+      // TODO
       await webclient.views.publish({
         token: botToken,
         user_id: event.user,
@@ -59,26 +60,7 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
     } else {
       let blocks = home.createProfilePrompt();
 
-      let myPostViews = [
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: ":heart_eyes_cat: *My Posts*",
-          },
-          accessory: {
-            type: "button",
-            text: {
-              type: "plain_text",
-              text: "Create Post",
-              emoji: true,
-            },
-            style: "primary",
-            value: "create_post",
-            action_id: "create_post",
-          },
-        },
-      ];
+      let myPostViews = home.myPostHeader();
 
       for (const post of myPosts) {
         let member = [];
@@ -102,15 +84,7 @@ socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
 
       blocks = blocks.concat(myPostViews);
 
-      let allPostViews = [
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: ":heart_eyes_cat: *Post Board*",
-          },
-        },
-      ];
+      let allPostViews = home.allPostHeader();
 
       allPostViews = blocks.concat(allPostViews);
 
@@ -265,6 +239,40 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
 });
 
 // TODO: Edit a post
+// socketModeClient.on("interactive", async ({ body, ack }) => {
+//   try {
+//     await ack();
+//     if (body.view.callback_id === "modal_create_post") {
+//       const data = body.view.state.values;
+//       const arr = Object.keys(data).map(function (k) {
+//         return data[k];
+//       });
+//       // console.log(arr);
+//       const name = arr[0].post_enter_username.value;
+//       const course = arr[1].post_enter_course.selected_option.text.text;
+//       const skills = arr[2].post_enter_expertise.selected_options.map(
+//         (e) => e.text.text
+//       );
+//       const member_ids = arr[3].post_enter_member.selected_users; // include self?
+//       const team_capacity = arr[4].post_enter_number.selected_option.text.text;
+//       const message = arr[5].post_enter_message.value;
+//       // console.log(name, course, skills, member_ids, team_capacity, message);
+//       const newPost = {
+//         userId: body.user.id,
+//         name: name,
+//         course: course,
+//         expertise: skills,
+//         member: member_ids,
+//         capacity: team_capacity,
+//         message: message,
+//       };
+//       await func();
+//       await lib.addPost(db, newPost);
+//     }
+//   } catch (error) {
+//     console.log("An error occurred", error);
+//   }
+// });
 
 // TODO: Delete a post
 
