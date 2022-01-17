@@ -5,6 +5,7 @@ require("dotenv").config();
 const lib = require("./dbOperations");
 const home = require("./views/home");
 const post = require("./views/post");
+const postboard = require("./views/postboard");
 const profile = require("./views/profile");
 
 const { SocketModeClient } = require("@slack/socket-mode");
@@ -32,11 +33,118 @@ func();
 socketModeClient.on("app_home_opened", async ({ event, body, ack }) => {
   try {
     await ack();
-    await webclient.views.publish({
-      token: botToken,
-      user_id: event.user,
-      view: home.renderHome,
-    });
+
+    await func();
+    const allPosts = await lib.getAllPosts(db);
+    // console.log(allPosts.length);
+    // console.log(body);
+
+    await func();
+    // check if user exists first
+    const myPosts = await lib.getAllPostsByUserId(db, body.event.user);
+    // console.log(myPosts.length);
+
+    if (allPosts.length == 0 && myPosts.length == 0) {
+      await webclient.views.publish({
+        token: botToken,
+        user_id: event.user,
+        view: home.renderDefaultHome(),
+      });
+    } else if (myPosts.length == 0) {
+      await webclient.views.publish({
+        token: botToken,
+        user_id: event.user,
+        view: home.renderDefaultHome(),
+      });
+    } else {
+      let blocks = home.createProfilePrompt();
+
+      let myPostViews = [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: ":heart_eyes_cat: *My Posts*",
+          },
+          accessory: {
+            type: "button",
+            text: {
+              type: "plain_text",
+              text: "Create Post",
+              emoji: true,
+            },
+            style: "primary",
+            value: "create_post",
+            action_id: "create_post",
+          },
+        },
+      ];
+
+      for (const post of myPosts) {
+        let member = [];
+        for (const userId of post.member) {
+          const userProfile = await webclient.users.profile.get({
+            user: userId,
+          });
+          member.push(member.push(userProfile.profile.display_name));
+        }
+        let myPostView = postboard.renderMyPost(
+          post._id,
+          post.name,
+          post.course,
+          post.expertise,
+          member,
+          post.capacity,
+          post.message
+        );
+        myPostViews = myPostViews.concat(myPostView);
+      }
+
+      blocks = blocks.concat(myPostViews);
+
+      let allPostViews = [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: ":heart_eyes_cat: *Post Board*",
+          },
+        },
+      ];
+
+      allPostViews = blocks.concat(allPostViews);
+
+      for (const post of allPosts) {
+        let member = [];
+        for (const userId of post.member) {
+          const userProfile = await webclient.users.profile.get({
+            user: userId,
+          });
+          member.push(userProfile.profile.display_name);
+        }
+
+        let allPostView = postboard.renderAllPost(
+          post._id,
+          post.name,
+          post.course,
+          post.expertise,
+          member,
+          post.capacity,
+          post.message
+        );
+        allPostViews = allPostViews.concat(allPostView);
+      }
+
+      await webclient.views.publish({
+        token: botToken,
+        user_id: event.user,
+        view: {
+          type: "home",
+          callback_id: "home_view",
+          blocks: allPostViews,
+        },
+      });
+    }
   } catch (error) {
     console.log("An error occurred", error);
   }
@@ -73,17 +181,17 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
     // await func();
     // const result = await lib.getUserById(db, "U02C2CKDF38");
     // console.log(result);
-  //   await func();
-  //   // store post id
-  //   obj = {
-  //     course: "CIT 596",
-  //     expertise: ["Java"],
-  //     member: ["U01F5ADBG1K"],
-  //     capacity: 4,
-  //     message: "hey",
-  //   };
-  //   const posts = await lib.deletePost(db, "61e4271c7f49c4ade1bf8729");
-  //   console.log(posts);
+    //   await func();
+    //   // store post id
+    //   obj = {
+    //     course: "CIT 596",
+    //     expertise: ["Java"],
+    //     member: ["U01F5ADBG1K"],
+    //     capacity: 4,
+    //     message: "hey",
+    //   };
+    //   const posts = await lib.deletePost(db, "61e4271c7f49c4ade1bf8729");
+    //   console.log(posts);
   } catch (error) {
     console.log("An error occurred", error);
   }
@@ -138,7 +246,7 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
       const member_ids = arr[3].post_enter_member.selected_users; // include self?
       const team_capacity = arr[4].post_enter_number.selected_option.text.text;
       const message = arr[5].post_enter_message.value;
-      console.log(name, course, skills, member_ids, team_capacity, message);
+      // console.log(name, course, skills, member_ids, team_capacity, message);
       const newPost = {
         userId: body.user.id,
         name: name,
@@ -162,12 +270,10 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
 
 // TODO: Join Channel
 
-
 (async () => {
   await socketModeClient.start();
   console.log("⚡️ Bolt app is running!");
 })();
-
 
 // TODO: Deployment using Heroku (We will use the following after we deploy the app.)
 
