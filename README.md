@@ -2,6 +2,8 @@
 
 ## Project Name: CITeams
 
+![logo](./logo/citeams.png)
+
 ### Group Members
 
 | Name | Email |
