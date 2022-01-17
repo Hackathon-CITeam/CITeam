@@ -12,6 +12,21 @@
 | Wentao Xu | wentaoxu@seas.upenn.edu |
 | Yihong(Joanne) Zhang | zhyihong@seas.upenn.edu |
 
+### Project Description
+
+CITeams is a convenient Slack App that helps MCIT students find course project team members and study mates. This Slack App makes the teammate matching process easier as MCIT students often face challenges of finding group members for course projects or simply study mates, especially during Covid-19 when students have to study remotely and do not have much interaction in person. In terms of some core features, a user can create, delete, and edit posts of recruitment for teammates or study mates. A user and the relevant users (current teammates) will be added to a channel created by the slack APP once the post is published. A user can see all public recruitment posts and choose to enter the channel that fits their need.
+### Anticipated Tech Stack
+1. NodeJS
+2. Bolt for JavaScript (Slack API)
+3. MongoDB Atlas (Database)
+4. Heroku (NodeJS hosting)
+
+
+### Prospect
+Looking into the future, CITeams will try to satisfy more application scenarios such as matching mock interview partners and food/bar mates, etc.
+
+
+
 ### Development Instructions
 
 1. Run `git clone git@github.com:Hackathon-CITeam/CITeams.git` to clone the project to your local machine.
