@@ -21,13 +21,6 @@
 5. After you have made some code changes on your branch, run `git add .`, `git commit -m "your commit message"`, `git push` to commit your change to your remote branch on GitHub. Note that you need to run `git push --set-upstream origin [your branch name]` **the first time** after you created your local branch. Only push codes to GitHub if you make sure that the app is not broken after your latest code change.
 6. Regularly push your code to GitHub, and make pull requests from main branch to fetch latest changes; talk to your other team members if you encounter a conflict and are not sure how to resolve it.
 
-### TODOs (Jan 17th)
-
-1. Channel
-2. Bugfixes & Styling issues
-3. Deployment (App limitations: socket mode unstable, 100 items limit)
-4. Video demo & Submission
-
 ### Links
 
 Use the prototypes in PRD as reference, implement the views using Block Kit Builder. 

@@ -519,7 +519,7 @@ socketModeClient.on("interactive", async ({ body, ack }) => {
   console.log("⚡️ Bolt app is running!");
 })();
 
-// TODO: Deployment using Heroku (We will use the following after we deploy the app.)
+// Deployment using Heroku (We will use the following after we deploy the app.)
 
 // const { App } = require("@slack/bolt");
 
